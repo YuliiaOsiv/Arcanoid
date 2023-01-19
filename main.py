@@ -1,36 +1,25 @@
 import pgzrun
-from vector import Vector
+import random
+from pgzero.actor import Actor
+import pygame
 
-
-class Circle:
-    def __init__(self, vector: Vector):
-        self.position = vector
-        self.velocity = Vector(0, 0) # speed - scalar, velocity - vector
-        self.acceleration = Vector(0, 0)
-
-
-WIDTH = 800
+WIDTH = 600
 HEIGHT = 800
-RADIUS = 50
-
-circle = Circle(Vector(200, 200))
-gravity = Vector(0, 20)
-
-def draw():
-    screen.clear()
-    screen.draw.circle((circle.position.x, circle.position.y), 50, "white")
+COLORS = {'red': 1, 'pink': 2, 'beige': 3, 'purple': 4}
 
 
-def update(dt): # dt - time since last frame
-    circle.acceleration += gravity
-    circle.velocity += circle.acceleration
-    v = circle.velocity
-    circle.acceleration = Vector(0, 0)
+class Paddle:
 
-    if circle.position.y >= HEIGHT - RADIUS and v.y > 0:
-        circle.velocity = Vector(v.x, -v.y)
-    circle.position += Vector(v.x * dt, v.y * dt)
-    pass
+    def __init__(self):
+        self.actor = Actor('paddle.png', center=(WIDTH // 2, HEIGHT - 100))
 
+    def update(self, ball):
+        if self.actor.colliderect(ball.actor):
+            ball.ball_y *= -1
+            if random.randint(0, 1):
+                ball.ball_x *= 1
+            else:
+                ball.ball_x = -1
 
-pgzrun.go()
+    def draw(self):
+        self.actor.draw()
