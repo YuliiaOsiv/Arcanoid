@@ -98,3 +98,42 @@ class HeartBonusLife:
             self.last = now
             self.hide = False # якщо час, який пройшов, більший, ніж час, який сердечко чекає, то воно падає
             self.actor.pos = (random.randint(10, WIDTH - 10), 0)
+
+class Obstacle:
+    def __init__(self, x, y, width=40, height=20, color='beige', strength=1):
+        self.pos = (x, y)
+        self.color = color
+        self.width = width
+        self.height = height
+        self.strength = strength
+
+    def draw(self):
+        screen.draw.filled_rect(Rect(self.pos, (self.width, self.height)), self.color)
+
+    def hits(self, ball: Ball):
+        if (abs(self.pos[0] - ball.actor.x) <= 40) and (abs(self.pos[1] - ball.actor.y) <= 20): # abs повертає абсолютне значення аргумента
+            self.strength -= 1
+            ball.ball_y *= -1
+            if random.randint(0, 1):
+                ball.ball_x *= 1
+            else:
+                ball.ball_x = -1
+        return self.strength == 0
+
+
+def create_obstacles(n, y, width, colors):
+
+    barriers = []
+    dx = (WIDTH - n * width) // (n + 1) # відстань між перешкодами
+    for i in range(n):
+        pos_x = dx * (i + 1) + width * i
+        color = random.choice(colors)
+        barriers.append(Obstacle(pos_x, y, color=color, strength=COLORS[color]))
+
+    for i in range(n - 1):
+        curr = barriers[i]
+        next = barriers[i + 1]
+        pos_x = curr.pos[0] + (next.pos[0] - curr.pos[0]) // 2
+        color = random.choice(colors)
+        barriers.append(Obstacle(pos_x, y + 30, color=color, strength=COLORS[color]))
+    return barriers
