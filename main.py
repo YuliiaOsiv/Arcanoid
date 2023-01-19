@@ -169,3 +169,27 @@ class BigPlatform:
 
     def draw(self):
         self.actor.draw()
+
+loss = False
+paddle = Paddle()
+hearts_alive = []
+for i in range(3):
+    hearts_alive.append(Heart(i))
+ball = Ball(5) # швидкість м'ячика
+platform = BigPlatform()
+heart_bonus = HeartBonusLife(random.randint(10, WIDTH-10), -10, 30)
+obstacles = create_obstacles(10, 70, 40, list(COLORS.keys()))
+
+
+def draw():
+    if loss:
+        return
+    screen.clear()
+    paddle.draw()
+    ball.draw()
+    platform.draw()
+    heart_bonus.draw()
+    for heart in hearts_alive:
+        heart.draw()
+    for item in obstacles:
+        item.draw()
