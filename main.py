@@ -193,3 +193,28 @@ def draw():
         heart.draw()
     for item in obstacles:
         item.draw()
+
+
+def update(dt):
+    if loss:
+        screen.draw.text("Game Over", (170, 350), color="red", fontsize=75)
+        return
+    if len(obstacles) == 0:
+        screen.draw.text("Win", (170, 350), color="purple", fontsize=75)
+        return
+    ball.update()
+    paddle.update(ball)
+    platform.update()
+    heart_bonus.update()
+    for barrier in obstacles:
+        if barrier.hits(ball):
+            obstacles.remove(barrier)
+            ball.hits()
+
+
+def on_mouse_move(pos):
+    x, y = pos
+    paddle.actor.x = x
+
+
+pgzrun.go()
